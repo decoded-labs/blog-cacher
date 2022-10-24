@@ -20,12 +20,9 @@ const fullsyncDB = async () => {
   if (!redis_client.isOpen()) {
     await redis_client.open(process.env.REDIS_URL);
   }
-  let result = await redis_client.execute(["HGETALL", "notion-pages"]);
-  //@ts-ignore
+  let result = (await redis_client.execute(["HGETALL", "notion-pages"])) as Array<string>;
   for (let i = 0; i < result.length / 2; i++) {
-    //@ts-ignore
     let serializedJSON = await getSerializedJSON(result[i * 2 + 1]);
-    //@ts-ignore
     await updateJSON(redis_client, result[i * 2], serializedJSON);
   }
   await redis_client.close();
@@ -36,16 +33,11 @@ const syncDB = async () => {
   if (!redis_client.isOpen()) {
     await redis_client.open(process.env.REDIS_URL);
   }
-  let result = await redis_client.execute(["HGETALL", "notion-pages"]);
-  //@ts-ignore
+  let result = (await redis_client.execute(["HGETALL", "notion-pages"])) as Array<string>;
   for (let i = 0; i < result.length / 2; i++) {
-    //@ts-ignore
     let jsonResult = await redis_client.execute(["JSON.GET", result[i * 2]]);
     if (jsonResult == null) {
-      //@ts-ignore
       let serializedJSON = await getSerializedJSON(result[i * 2 + 1]);
-      console.log(serializedJSON);
-      //@ts-ignore
       await writeJSON(redis_client, result[i * 2], serializedJSON);
     }
   }

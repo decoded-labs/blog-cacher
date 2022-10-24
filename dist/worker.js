@@ -30,12 +30,9 @@ const fullsyncDB = () => __awaiter(void 0, void 0, void 0, function* () {
     if (!redis_client.isOpen()) {
         yield redis_client.open(process.env.REDIS_URL);
     }
-    let result = yield redis_client.execute(["HGETALL", "notion-pages"]);
-    //@ts-ignore
+    let result = (yield redis_client.execute(["HGETALL", "notion-pages"]));
     for (let i = 0; i < result.length / 2; i++) {
-        //@ts-ignore
         let serializedJSON = yield getSerializedJSON(result[i * 2 + 1]);
-        //@ts-ignore
         yield updateJSON(redis_client, result[i * 2], serializedJSON);
     }
     yield redis_client.close();
@@ -45,16 +42,11 @@ const syncDB = () => __awaiter(void 0, void 0, void 0, function* () {
     if (!redis_client.isOpen()) {
         yield redis_client.open(process.env.REDIS_URL);
     }
-    let result = yield redis_client.execute(["HGETALL", "notion-pages"]);
-    //@ts-ignore
+    let result = (yield redis_client.execute(["HGETALL", "notion-pages"]));
     for (let i = 0; i < result.length / 2; i++) {
-        //@ts-ignore
         let jsonResult = yield redis_client.execute(["JSON.GET", result[i * 2]]);
         if (jsonResult == null) {
-            //@ts-ignore
             let serializedJSON = yield getSerializedJSON(result[i * 2 + 1]);
-            console.log(serializedJSON);
-            //@ts-ignore
             yield writeJSON(redis_client, result[i * 2], serializedJSON);
         }
     }
