@@ -1,0 +1,31 @@
+{
+  "name": "blog-cacher",
+  "version": "1.0.0",
+  "description": "redis blog cacher for decoded-labs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/decoded-labs/blog-cacher.git"
+  },
+  "keywords": [
+    "redis",
+    "blog",
+    "cache"
+  ],
+  "author": "takez0_o",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/decoded-labs/blog-cacher/issues"
+  },
+  "homepage": "https://github.com/decoded-labs/blog-cacher#readme",
+  "dependencies": {
+    "@notionhq/client": "^2.2.1",
+    "dotenv": "^16.0.3",
+    "redis": "^4.3.1",
+    "redis-om": "^0.3.6",
+    "typescript": "^4.8.4"
+  }
+}
