@@ -17,7 +17,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
         yield syncDB();
         console.log("Sleeping for 30 seconds..");
-    }), 10000);
+    }), 30000);
 });
 const syncDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const redis_client = new redis_om_1.Client();

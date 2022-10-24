@@ -7,7 +7,7 @@ const main = async () => {
   setInterval(async () => {
     await syncDB();
     console.log("Sleeping for 30 seconds..");
-  }, 10000);
+  }, 30000);
 };
 
 const syncDB = async () => {
