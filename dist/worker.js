@@ -14,10 +14,31 @@ const redis_om_1 = require("redis-om");
 const dotenv = require("dotenv");
 dotenv.config();
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    let counter = 0;
     setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield syncDB();
-        console.log("Sleeping for 30 seconds..");
-    }), 30000);
+        if (counter % 60 == 0) {
+            yield fullsyncDB();
+        }
+        else {
+            yield syncDB();
+        }
+        counter++;
+    }), 60000);
+});
+const fullsyncDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const redis_client = new redis_om_1.Client();
+    if (!redis_client.isOpen()) {
+        yield redis_client.open(process.env.REDIS_URL);
+    }
+    let result = yield redis_client.execute(["HGETALL", "notion-pages"]);
+    //@ts-ignore
+    for (let i = 0; i < result.length / 2; i++) {
+        //@ts-ignore
+        let serializedJSON = yield getSerializedJSON(result[i * 2 + 1]);
+        //@ts-ignore
+        yield updateJSON(redis_client, result[i * 2], serializedJSON);
+    }
+    yield redis_client.close();
 });
 const syncDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const redis_client = new redis_om_1.Client();
@@ -41,6 +62,9 @@ const syncDB = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 const writeJSON = (redis_client, key, json) => __awaiter(void 0, void 0, void 0, function* () {
     yield redis_client.execute(["JSON.SET", key, ".", json]);
+});
+const updateJSON = (redis_client, key, json) => __awaiter(void 0, void 0, void 0, function* () {
+    yield redis_client.execute(["JSON.SET", key, "$", json]);
 });
 const getSerializedJSON = (databaseId) => __awaiter(void 0, void 0, void 0, function* () {
     const notion_client = new client_1.Client({ auth: process.env.NOTION_KEY });
